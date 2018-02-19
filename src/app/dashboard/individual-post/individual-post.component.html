@@ -1,0 +1,190 @@
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <h3>{{user.displayName}}               
+            <a style="margin-top:5px;margin-bottom:2px;" [routerLink]="['/dashboard/stories']"
+                    class="btn btn-info btn-xs pull-right">
+                <span class="glyphicon glyphicon-menu-left"></span> Back                
+            </a>
+        </h3>
+    </div>
+</div>
+
+<div class="row">
+    <div id="divUserPosts" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">            
+        <div  #divPostsContainer id="idDivPostsContainer">
+            <div class="panel panel-default" *ngFor="let post of userPosts | async" 
+            style="border-color: rgb(190, 30, 129);border-width: 2px;">
+                <div class="panel-heading alert-warning" 
+                [ngStyle]="{'background-color':post.enlightenedStoryCount > 0 ? 'rgb(190, 30, 129)' : '',
+                        'color': post.enlightenedStoryCount > 0 ? '#ffffff' : '' }">
+                    <div class="input-group-btn pull-right">
+                        <span class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-menu-hamburger"></span>
+                        </span>
+                    <ul class="dropdown-menu" id="ddnPost">
+                        <li *ngIf="!isFabMeStory" (click)="markStoryFavorite(post)"><a style="cursor: pointer;">
+                            <span class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-heart"></span></span> Favorite</a></li>
+                        <li *ngIf="!isInterestingStory"  (click)="markStoryInteresting(post)"><a style="cursor: pointer;">
+                            <span class="btn btn-xs btn-info"><span class="glyphicon glyphicon-ice-lolly-tasted"></span></span> Interesting</a></li>
+                        <li *ngIf="!isInspiringStory"  (click)="storyInspiredMe(post)"><a style="cursor: pointer;">
+                            <span class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-grain"></span></span> Inspiring</a></li>
+                        <li *ngIf="!isAppreciateStory"  (click)="appreciateStory(post)"><a style="cursor: pointer;">
+                            <span class="btn btn-xs btn-success"><span class="glyphicon glyphicon-leaf"></span></span> Appreciate</a></li>
+                        <li *ngIf="!isEnlightenedStory"  (click)="enlightenStory(post)"><a style="cursor: pointer;">
+                            <span class="btn btn-xs" style="background-color: rgb(233, 85, 188)"><span class="glyphicon glyphicon-lamp"></span></span> Enlighten</a></li>
+                        <li *ngIf="post.authorUID != user.uid && !isAddedToCollection"  (click)="addStoryToCollection(post)"><a style="cursor: pointer;">
+                            <span class="btn btn-xs" style="background-color: brown;"><span class="glyphicon glyphicon-briefcase"></span></span> Add to Collection</a></li>
+                        <li *ngIf="post.authorUID == user.uid"><a style="cursor: pointer;" (click)="initiatePostEditing(post)">
+                            <span class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-pencil"></span></span> Edit</a></li>
+                        <li *ngIf="post.authorUID == user.uid"><a style="cursor: pointer;"
+                            (click)="deletePost(post.postUID, post.authorUID, post.imageKey,post.imageName, post.videoKey,post.videoName)">
+                            <span class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span></span> Delete</a>
+                        </li>
+                    </ul>
+                </div>
+                <span><b>{{post.title}}</b></span>                 
+            </div>
+            <div class="panel-body">
+                <a [routerLink]="['/dashboard/friend-profile', post.authorUID + 'false']">
+                    <img src={{post.authorPic}} class="pull-left img img-circle" 
+                    style="height: 25px;width: 25px;border-radius: 10%;" />
+                    <span class="pull-left" style="margin-left:2px;">{{  post.authorName}}</span>
+                </a>
+                <span class="pull-right">{{post.createdAt}}</span>
+                <hr />
+                <div *ngIf="post.imageURL" style="margin-bottom: 3px;">
+                    <a href="{{post.imageURL}}">
+                        <img id="idImage" style="max-height:150px;max-width:200px;" [src]="post.imageURL">
+                    </a>
+                </div>
+                <div *ngIf="post.videoURL" style="margin-bottom: 3px;">
+                    <video id="idVideo" class="tn img-responsive img-rounded"
+                    style="max-height: 200px;padding-left: 3px;padding-right: 3px;" controls>                          
+                        <source [src]="post.videoURL" type="video/webm">   
+                        <source [src]="post.videoURL" type="video/mp4">                                
+                    </video>
+                </div>
+                <p>{{post.content}}</p>
+
+                <!-- editing post section -->
+                <div *ngIf="amazonEditPost" id="modalEditPost">
+                            <div class="panel-header text-primary">
+                                <h4 class="modal-title">Edit Post</h4>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form" [formGroup]="myEditPostForm" (ngSubmit)="editPost(editPostTitle.value, editPostContent.value)" #f="ngForm">
+                                    <div class="form-group">
+                                        <label for="Username">Title:</label>
+                                        <input type="text" style="height: 60px;" [formControl]="myEditPostForm.controls['title']" maxlength="80" placeholder="Title"
+                                        class="form-control" #editPostTitle [value]="editPostModel ? editPostModel.title : ''" id="editPostTitle" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="content">Content</label>
+                                        <textarea type="text" style="height: 120px;" [formControl]="myEditPostForm.controls['content']" class="form-control"
+                                        #editPostContent [value]="editPostModel ? editPostModel.content : ''"></textarea>
+                                    </div>
+                                    <div class="form-group" style="margin-top:10px;">                            
+                                        <button class="btn btn-warning" [disabled]="!myEditPostForm.valid" type="submit">
+                                            Save</button>
+                                        <span class="btn btn-primary" (click)="editPostFormCancel()" type="button" id="btnCancelEditPost">
+                                            Cancel</span>                                
+                                    </div>
+                                </form>
+                            </div>
+                </div>
+
+            </div> 
+            <div class="panel-footer" id="divPostFooter">
+                <span class="pull-right" style="margin-right: 4px;">
+                    <span *ngIf="post.inspiringStoryCount > 0" class="btn btn-warning btn-xs" style="margin:1px;">
+                        <span class="glyphicon glyphicon-grain"></span> {{post.inspiringStoryCount}}
+                    </span>
+                    <span *ngIf="post.appreciateStoryCount > 0" class="btn btn-success btn-xs">
+                        <span class="glyphicon glyphicon-leaf"></span> {{post.appreciateStoryCount}}
+                    </span>
+                    <span *ngIf="post.interestingStoryCount > 0" class="btn btn-info btn-xs" style="margin:1px;">
+                        <span class="glyphicon glyphicon-ice-lolly-tasted"></span> {{post.interestingStoryCount}}
+                    </span>
+                    <span *ngIf="post.sympathisingStoryCount > 0" class="btn btn-xs" style="margin:1px;background-color: rgb(62, 231, 73);">
+                        <span class="glyphicon glyphicon-tree-deciduous"></span> {{post.sympathisingStoryCount}}
+                    </span>
+                    <span *ngIf="post.fabMeStoryCount > 0" class="btn btn-danger btn-xs" style="margin:1;">
+                        <span class="glyphicon glyphicon-heart"></span> {{post.fabMeStoryCount}}
+                    </span> 
+                </span> 
+                <span *ngIf="postComments" id="divShowComments">See Comments..</span>
+                    <div *ngFor="let comment of postComments | async">
+                        <div *ngIf="comment.postUID == post.postUID">
+                            <a [routerLink]="['/dashboard/friend-profile', comment.authorUID + 'false']">
+                                <img src={{comment.authorPic}} class="pull-left img img-circle" 
+                                        style="height: 25px;width: 25px;border-radius: 10%;" />
+                                <span class="pull-left" style="margin-left:2px;">{{  comment.authorName}}</span>
+                            </a>
+                            <span class="pull-right">{{comment.createdAt}}</span>
+                            <hr /><div class="input-group-btn pull-right">
+                                    <span class="btn btn-warning btn-xs dropdown-toggle" (click)="checkCommentFeatureAvailable(comment,post)" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-option-vertical"></span>
+                                    </span>
+                                    <ul class="dropdown-menu" id="ddnComment">
+                                        <li *ngIf="!isFabMeComment"><a style="cursor: pointer;" (click)="markCommentfavorite(comment, post)">
+                                            <span class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-heart"></span></span> Favorite</a>
+                                        </li>
+                                        <li *ngIf="!isInterestingComment"><a style="cursor: pointer;" (click)="markInterestingComment(comment, post)">
+                                            <span class="btn btn-xs btn-info"><span class="glyphicon glyphicon-ice-lolly-tasted"></span></span> Interesting</a>
+                                        </li>
+                                        <li *ngIf="!isInspiringComment"><a style="cursor: pointer;" (click)="markInspiringComment(comment, post)">
+                                                <span class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-grain"></span></span> Inspiring</a>
+                                            </li>
+                                        <li *ngIf="!isAppreciateComment"><a style="cursor: pointer;" (click)="appreciateComment(comment, post)">
+                                            <span class="btn btn-xs btn-success"><span class="glyphicon glyphicon-leaf"></span></span> Appreciate</a>
+                                        </li>
+                                        <li  *ngIf="comment.authorUID == user.uid"><a style="cursor: pointer;" (click)="initiateCommentEditing(comment, post)">
+                                            <span class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-pencil"></span></span> Edit</a></li>
+                                        <li *ngIf="comment.authorUID == user.uid"><a style="cursor: pointer;" (click)="deleteComment(comment, post)">
+                                            <span class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span></span> Delete</a></li>                                        
+                                    </ul>
+                                </div>
+                                <span class="pull-right" style="margin-right: 10px;">                                       
+                                    <span *ngIf="comment.inspiringCommentCount > 0" class="btn btn-xs btn-warning" style="margin-right: 1px;margin-left: 1px;">
+                                        <span class="glyphicon glyphicon-grain"></span> {{comment.inspiringCommentCount}}</span>                                       
+                                    <span *ngIf="comment.appreciateCommentCount > 0" class="btn btn-xs btn-success" style="margin-right: 1px;margin-left: 1px;">
+                                        <span class="glyphicon glyphicon-leaf"></span> {{comment.appreciateCommentCount}}</span>                                        
+                                    <span *ngIf="comment.interestingCommentCount > 0" class="btn btn-xs btn-info" style="margin-right: 1px;margin-left: 1px;">
+                                        <span class="glyphicon glyphicon-ice-lolly-tasted"></span> {{comment.interestingCommentCount}}</span>
+                                    <span *ngIf="comment.fabMeCommentCount > 0" class="btn btn-xs btn-danger" style="margin-right: 1px;margin-left: 1px;">
+                                        <span class="glyphicon glyphicon-heart"></span> {{comment.fabMeCommentCount}}</span>  
+                                </span>
+                            <p>{{comment.text}}</p>
+                            <div *ngIf="amazonComment == comment.commentUID" id="modalEditCommentAmazon" >
+                                    <form class="form" [formGroup]="myCommentForm" (ngSubmit)="editComment(formComment.value)" #formComment="ngForm">
+                                        <div class="form-group">
+                                                <textarea type="text" required [formControl]="myCommentForm.controls['commentText']" class="form-control"
+                                                id="editCommentText" [value]="editCommentModel ? editCommentModel.text : ''"></textarea>
+                                            </div>
+                                            <div style="margin-top:10px;">                            
+                                                <button class="btn btn-warning" [disabled]="!myCommentForm.valid"  type="submit">
+                                                    Save</button>
+                                                <span class="btn btn-primary" (click)="cancelCommentEditing()" id="btnCancelEditComment">
+                                                    Cancel</span>                                
+                                        </div>
+                                    </form>
+                                    
+                        </div>
+                            
+                        </div>
+                    </div>
+                    <div class="input-group" style="margin-top: 2px;">
+                        <input [(ngModel)]="post.newComment" type="text" class="form-control form-control-sm" id="comment" 
+                        placeholder="your feelings.." (keyup.enter)="postNewComment(newComment.value, post)" #newComment>
+                        <span *ngIf="post.newComment"  class="input-group-btn">
+                            <button class="btn btn-primary" (click)="saveComment(newComment.value, post)" type="button">Go!</button>
+                        </span>
+                    </div>
+                </div>           
+            </div>
+            <div *ngIf="!userPosts">
+                It looks story doesn't exist anymore..
+            </div>
+        </div>  
+    </div>
+</div>

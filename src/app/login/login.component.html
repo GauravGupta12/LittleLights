@@ -1,0 +1,165 @@
+
+
+<div class="col-xs-6 col-sm-4">
+  <h3>Please login here</h3>
+  <div *ngIf="loginErrorMessage" class="alert alert-danger" role="alert">
+      {{loginErrorMessage}}
+  </div>
+  <form  [formGroup]="myForm" (ngSubmit)="login(f.value)" #f="ngForm">
+      <div class="form-group">
+          <label for="username">Email</label>
+          <input required #inpEmail pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" 
+          (keyup)="checkEmailExist(inpEmail.value)" class="form-control" [formControl]="myForm.controls['email']" type="text" id="inpEmail" placeholder="email" />
+          <small *ngIf="!EmailExists" class="text text-danger"><b>Email doesn't exist</b></small>
+      </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input required class="form-control" [formControl]="myForm.controls['password']" type="password" id="inpPassword" placeholder="password" />
+            <small class="text text-danger" *ngIf="myForm.controls['password'].hasError('minlength') && 
+                myForm.controls['password'].touched">
+                <b>Minimum length required is 8 characters.</b>
+            </small>
+            <div><a  data-target="#modalForgotPassword" data-toggle="modal" style="cursor: pointer;">Forgot Password</a>
+            </div>
+        </div>
+      <button type="submit" [disabled]="!myForm.valid" class="btn btn-primary">Login</button>
+  </form>
+  <div class="text-primary" style="margin-top:8px;">
+      <a [routerLink]="['/register']" *ngIf="!authService.isLoggedIn()">Register here</a>
+  </div>
+</div>
+<div class="col-xs-6 col-sm-4" style="margin-top:20px;">
+    <p><b>Login</b></p>
+    <p>using your social account. <a style="cursor:pointer;" data-target="#modalLoginNote" data-toggle="modal">Please note this</a></p>
+    <ul class="list-group">
+        <li class="list-group-item btn btn-danger list-group-item-danger" (click)="loginGoogle()">Google</li>
+        <li class="list-group-item btn btn-primary list-group-item-info" (click)="loginFacebook()">Facebook</li>
+        <li class="list-group-item btn btn-success list-group-item-success" (click)="loginGithub()">Github</li>
+        <li class="list-group-item btn btn-info list-group-item-info" (click)="loginTwitter()">Twitter</li>
+    </ul> 
+    <button hidden type="button" id="btnPromptPasswordNew" #btnPasswordNew  data-target="#modalNewPassword" 
+        data-toggle="modal">Btn Password</button>
+    <button hidden type="button" id="btnPromptPassword" #btnPassword  data-target="#modalExistingPassword" 
+        data-toggle="modal">Btn New Password</button>
+</div>
+<div class="modal" id="modalLoginNote" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Important Message</h4>
+            </div>
+            <div class="modal-body">
+<p style="white-space: pre-wrap;">If you are signing in using any social account, it automatically signs you in that account too. So, please remember to sign out from that account also (in case you are using a computer used by others too). 
+To verify, after login here, open your social account's website in a new tab.
+Thanks !</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalNewPassword" tabindex="-1" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-primary">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">New password for existing account</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form" [formGroup]="formNewPassword" (ngSubmit)="ValidateNewPassword(inpNewPassword.value)" 
+                        #formEP="ngForm">
+                        <p>Please proivde new password for your existing account. This password is only applicable for your account in Little Lights</p>
+                        <div class="form-group">
+                            <label for="content">Password</label>
+                            <input type="password" #inpNewPassword required [formControl]="formNewPassword.controls['password']" 
+                                class="form-control" />
+                            <small class="text text-danger" *ngIf="formNewPassword.controls['password'].hasError('minlength') && 
+                                formNewPassword.controls['password'].touched">
+                                <b>Minimum length required is 8 characters.</b>
+                            </small>
+                        </div>
+                        <div class="form-group" style="margin-top:10px;">                            
+                            <button class="btn btn-warning" [disabled]="!formNewPassword.valid"  type="submit" 
+                                data-target="#modalNewPassword" data-toggle="modal">
+                                Send</button>
+                            <span class="btn btn-primary" (click)="cancelNewPassword()" type="button" id="btnCancelEP"
+                                 data-target="#modalNewPassword" data-toggle="modal">
+                                Cancel</span>                                
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal" id="modalExistingPassword" tabindex="-1" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Password for existing account</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form" [formGroup]="formExistingPassword" (ngSubmit)="ValidateExistingPassword(inpExistingPassword.value)" 
+                    #formEP="ngForm">
+                    <p>Please proivde password for your existing account</p>
+                    <div class="form-group">
+                        <label for="content">Password</label>
+                        <input type="password" #inpExistingPassword required [formControl]="formExistingPassword.controls['password']" 
+                            class="form-control" />
+                        <small class="text text-danger" *ngIf="formExistingPassword.controls['password'].hasError('minlength') 
+                            && formExistingPassword.controls['password'].touched">
+                            <b>Minimum length required is 8 characters.</b>
+                        </small>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;">                            
+                        <button class="btn btn-warning" [disabled]="!formExistingPassword.valid"  type="submit" 
+                            data-target="#modalExistingPassword" data-toggle="modal">
+                            Send</button>
+                        <span class="btn btn-primary" (click)="cancelExistingPassword()" type="button" id="btnCancelEP" 
+                            data-target="#modalExistingPassword" data-toggle="modal">
+                            Cancel</span>                                
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalForgotPassword" tabindex="-1" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-primary">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Reset Password</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form" [formGroup]="forgotPasswordForm" (ngSubmit)="SendForgotPasswordEmail(emailFP.value)" #formFP="ngForm">
+                    <p>Please proivde your email to reset password</p>
+                    <div class="form-group">
+                        <label for="content">Email</label>
+                        <input type="text" #emailFP required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" (keyup)="checkEmailExistForgotPassword(emailFP.value)"
+                            [formControl]="forgotPasswordForm.controls['email']" class="form-control" id="txtFPEmail" />
+                        <small *ngIf="!EmailFPExists" class="text text-danger"><b>Email doesn't exist</b></small>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;">                            
+                        <button class="btn btn-warning" [disabled]="!forgotPasswordForm.valid"  type="submit" data-target="#modalForgotPassword" data-toggle="modal">
+                            Send</button>
+                        <span class="btn btn-primary" (click)="cancelForgotPasswordEmail()" type="button" id="btnCancelFP" data-target="#modalForgotPassword" data-toggle="modal">
+                            Cancel</span>                                
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div>
+        <button type="button" class="btn btn-danger" (click)="loginGoogle()">Google</button>
+    </div>
+    <div>
+        <button type="button" class="btn btn-primary" (click)="loginFacebook()">Facebook</button>
+    </div>
+    <div>
+        <button type="button" class="btn btn-success" (click)="loginGithub()">Github</button>
+    </div>
+    <div>
+        <button type="button" class="btn btn-info" (click)="loginTwitter()">Twitter</button>
+    </div> -->

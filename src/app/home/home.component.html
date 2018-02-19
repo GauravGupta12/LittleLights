@@ -1,0 +1,20 @@
+<div style="margin-top:20px;" class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+  <h4 *ngIf="!displayName" class="text-primary"><b>Welcome ! </b></h4>
+  <h4 *ngIf="displayName" class="text-primary"><b>Welcome {{displayName}},</b></h4>
+<p style="white-space: pre-wrap;color:rgb(89, 18, 156);">This is home for Little Lights, where you can share your stories, personal experiences, failures, mistakes or anything else you want to share. It’s an open platform to express your feelings with everyone out there. Please don’t hesitate, if you have something to share or consider worth sharing, then go for it coz you never know, there might be someone who has also experienced the similar situations and may appreciate your move.
+So, be relaxed and go forth.. !
+
+On a requesting note, please respect the feelings of others and appreciate the differences, if you don’t like anything, just move on.          
+And, there’s always something interesting for you.... !
+<span style="color:rgb(11, 107, 41);">
+Sincerely,
+Gaurav Krishn
+</span></p>
+<span *ngIf="!this.authService.isLoggedIn()">
+    <button  [routerLink]="['/login']" class="btn btn-warning">
+      Have a nice day ..
+      <span class="glyphicon glyphicon-thumbs-up"></span></button>
+    </span>
+</div>
+
+<!-- If you may not share, others would never know about your experiences nor about you.  -->

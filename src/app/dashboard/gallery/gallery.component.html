@@ -1,0 +1,91 @@
+ <div id="divUserGallery" class="row">
+    <div class="col-lg-7 col-md-7 col-sm-7">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Latest Photos
+                    <button type="button" id="btnAddPictures" class="btn btn-warning pull-right">
+                        <!-- data-toggle="modal" 
+                        data-target="#modalAddNewPhotos"> -->
+                        <span class="glyphicon glyphicon-camera"></span> Add</button>
+                </div>
+                <div *ngIf="upload">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-animated" [ngStyle]="{ 'width' : upload?.progress + '%' }">
+                            Progress: {{upload?.progress}}% completed
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">    
+                    <ul id="thumbnailList">
+                        <li *ngFor="let image of images | async" class="img">
+                            <a [routerLink]="['/image', image.key + 'yuiop' + '']">
+                                <img src="{{image.url}}" style="display:inline;" class="tn" />
+                            </a>
+                            <span class="btn btn-danger btn-xs" (click)="deleteImage(image.key, image.name,image.postUID)">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </span>
+                            <ul class="dropdown-menu" id="ddnImages">
+                                    <li><a style="cursor: pointer;">Favorite</a></li>
+                                    <li><a style="cursor: pointer;" >Delete</a></li>                                    
+                                </ul>
+                        </li>
+                    </ul>
+                    <ul id="thumbnailList">
+                            <li *ngFor="let video of videos | async" class="img">
+                                <div>
+                                    <video id="idVideo" style="display:inline;" class="tn img-responsive img-rounded" controls>                          
+                                        <source src="{{video.url}}" type="video/webm">   
+                                        <source src="{{video.url}}" type="video/mp4">                                    
+                                    </video>
+                                </div>
+                                <div class="btn btn-danger btn-xs" (click)="deleteVideo(video.key,video.name,video.postUID)">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </div>
+                                <ul class="dropdown-menu" id="ddnVideos">
+                                        <li><a style="cursor: pointer;">Favorite</a></li>
+                                        <li><a style="cursor: pointer;">Delete</a></li>
+                                        
+                                    </ul>
+                            </li>
+                        </ul>
+                </div>            
+            </div>            
+        
+    </div>   
+</div>
+<div class="modal" id="modalAddNewPhotos" style="margin-top: 15px;" tabindex="-1" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-primary">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Upload New Images</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <input type="file" id="inputFiles" class="btn btn-default" (change)="handleFiles($event)" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnUploadFiles" style="display: none; " class="btn btn-primary" data-dismiss="modal" (click)="uploadFiles()">Upload</button>
+                    <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- <div id="imageCarousel" class="carousel silde" data-wrap="false" data-interval="2000" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li class="active"
+             data-target="#imageCarousel" data-slide-to="0"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="item active" *ngFor="let image of images | async">
+            <img src={{image.url}} class="img-responsive" />
+        </div>
+    </div>
+    <a href="#imageCarousel" class="carousel-control left" data-silde="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a href="#imageCarousel" class="carousel-control left" data-silde="next">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+</div> -->

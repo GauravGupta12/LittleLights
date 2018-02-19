@@ -1,0 +1,72 @@
+
+<div class="navbar navbar-fixed-top navbar-inverse">
+  <div class="container">
+      <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#MainNavbar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </button>
+          <div class="navbar-brand">
+              Little Lights
+          </div>
+      </div>
+      <div class="navbar-collapse collapse" id="MainNavbar">
+
+          <ul class="nav navbar-nav">
+              <li *ngIf="isLoggedIn()" class="visible-xs">
+                  <a routerLinkActive="active" class="text-primary well-sm">
+                      <span class="glyphicon glyphicon-user"></span>  Welcome {{username}}
+                  </a>
+              </li>
+              <li  *ngIf="!isLoggedIn()">
+                  <a routerLinkActive="active" [routerLink]="['/home']" class="text-success">
+                      <span class="glyphicon glyphicon-home"></span> Home
+                  </a>
+              </li>
+              <!--<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> About</a></li>
+              <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Contact</a></li>-->
+              <li *ngIf="!isLoggedIn()"><a id="linkLogin" routerLinkActive="active" [routerLink]="['/login']" class="text-success"><span class="glyphicon glyphicon-eye-open"></span> Login</a></li>
+              <li *ngIf="!isLoggedIn()"><a routerLinkActive="active" [routerLink]="['/register']" class="text-success"><span class="glyphicon glyphicon-registration-mark"></span> Register</a></li>
+              <li *ngIf="isLoggedIn()" class="hidden-xs"><a routerLinkActive="active" [routerLink]="['/dashboard']" class="text-success"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
+              <li *ngIf="isLoggedIn()" class="hidden-xs"><a routerLinkActive="active" [routerLink]="['/dashboard/help-faq']" class="text-success"><span class="glyphicon glyphicon-search"></span> About (Help)</a></li>              
+              <li *ngIf="isLoggedIn()" class="hidden-xs pull-right">
+                  <a routerLinkActive="active" class="text-primary well-sm">
+                      <span class="glyphicon glyphicon-user"></span>  Welcome {{username}}
+                  </a>
+              </li>
+            <li *ngIf="isLoggedIn()" class="hidden-lg hidden-md hidden-sm"><a routerLinkActive="active" [routerLink]="['/dashboard/help-faq']" class="text-success">
+                About (Help And FAQs)</a></li>
+            <li *ngIf="isLoggedIn()" class="hidden-lg hidden-md hidden-sm"><a routerLinkActive="active" [routerLink]="['/dashboard/my-profile']" class="text-success">
+                Profile</a></li>
+            <li *ngIf="isLoggedIn()" class="hidden-lg hidden-md hidden-sm"><a routerLinkActive="active" [routerLink]="['/dashboard/stories']" class="text-success">
+                Stories</a></li>
+            <li *ngIf="isLoggedIn()" class="hidden-lg hidden-md hidden-sm"><a routerLinkActive="active" [routerLink]="['/dashboard/my-stories']" class="text-success">
+                My Stories</a></li>
+            <li *ngIf="isLoggedIn()" class="hidden-lg hidden-md hidden-sm"><a routerLinkActive="active" [routerLink]="['/dashboard/my-collection']" class="text-success">
+                My Collection</a></li>
+            <li *ngIf="isLoggedIn()" class="hidden-lg hidden-md hidden-sm"><a routerLinkActive="active" [routerLink]="['/dashboard/gallery']" class="text-success">
+                Gallery</a></li>                
+            <li *ngIf="isLoggedIn()" class="hidden-lg hidden-md hidden-sm"><a routerLinkActive="active" [routerLink]="['/dashboard/friends']" class="text-success">
+                Friends</a></li>
+            <li *ngIf="isLoggedIn()"><a routerLinkActive="active" style="cursor: pointer;" (click)="logoutOld()" class="text-success">
+                <span class="glyphicon glyphicon-eye-close"></span> Logout</a></li>   
+          </ul>
+      </div>
+  </div>
+</div>
+
+<div id="content">
+  <div class="container body-content custom-body">
+      <router-outlet></router-outlet>   
+  </div>
+  <!-- <div style="margin-top:10px;">    
+    <div class="well">
+            <button (click)="submitEvent()" class="btn btn-info">
+                    Submit an Event
+                </button>
+        <p>clicking above button will submit an event to google anyalytics api</p>
+    </div>
+  </div>  -->
+</div>
+

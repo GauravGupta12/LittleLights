@@ -1,0 +1,17 @@
+
+<h2>Search History</h2>
+<table class="table table-bordered" style="width:fit-content;">
+    <!-- <thead class="thead">
+        <th class="th">Searched Item</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Time</th>
+        <th>Link</th>
+    </thead> -->
+    <tbody>
+        <tr class="tr" *ngFor="let search of searchHistory">
+            <td>{{search}}</td>
+        </tr>
+    </tbody>
+</table>
+<button (click)="clearSearch()" class="btn btn-default">Clear Search</button>

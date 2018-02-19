@@ -1,0 +1,16 @@
+<div id="divUserFriends" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading alert alert-warning" style="height: 40px;margin-bottom: 5px;">
+            <h4><b>{{displayName}}'s Friends</b></h4>
+        </div>
+        <div class="panel-body" *ngFor="let friend of myFriends | async" style="border-bottom:1px solid brown;">
+            <div>
+                 <a [routerLink]="['/dashboard/friend-profile', friend.friendUID + 'false']">
+                    <img class="img img-responsive pull-left" style="height:25px;width:25px;border-radius: 10%;"
+                    [src]="friend.profilePic">
+                    <span style="margin:2px;margin-left:5px;">{{friend.friendName}}</span>
+                </a>                 
+            </div>                    
+        </div>                
+    </div>
+</div>

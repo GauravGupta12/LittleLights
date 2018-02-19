@@ -1,0 +1,24 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "all-users": {
+      "$user": {
+        "all-notifications": {
+          ".indexOn": "status"
+        },
+        "all-reachOutMessages": {          
+          ".indexOn": "rechoutMsgNumber"
+        }
+      }
+    },
+    "all-posts": {
+      ".indexOn": "postNumber"
+    },
+    "all-visitHome": {
+      ".read": true,
+      ".write": true
+    }
+  }
+    
+}

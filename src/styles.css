@@ -1,0 +1,73 @@
+/* You can add global styles to this file, and also import other style files */
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+  }
+  .story-highlight{
+    border: 2px rgb(13, 104, 224) solid;
+  }
+  .story-normal{
+    border: 2px rgb(155, 28, 98) solid;
+  }
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+  }
+  .custom-alert {
+    padding: 15px;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+.btnPostFloating {
+    position:relative;
+    margin: 1px;
+    margin-left:45%;
+    background-color: rgb(175, 42, 124);
+}
+pre {
+    
+    font-family: arial;
+    white-space: pre;
+    margin: 1em 0;
+}
+.element {
+    position: relative;
+    margin-top:90%;
+    margin-right:90%;
+}
+ 
+/*replace the content value with the
+corresponding value from the list below*/
+ 
+.element:before {
+    content: "\f14b";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+/*--adjust as necessary--*/
+    color: #000;
+    font-size: 18px;
+    padding-right: 0.5em;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+.custom-body{
+ margin-top: 40px;
+}
+.margin5{
+    margin: 5px;
+}
+.images {
+    display: inline;
+    margin: 0px;
+    padding: 0px;
+    vertical-align:middle;
+    width:200px;
+}
+.user-post-margin{
+    margin-top: 20px;
+}
+.profile-left-margin{
+    margin-left:8px;
+}
