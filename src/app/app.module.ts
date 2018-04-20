@@ -54,12 +54,12 @@ import { UserProfileService } from './services/user-profile.service';
 import { EqualValidator } from './dashboard/equal-validator.directive';
 
 export const firebaseConfig = {
-  apiKey: 'AIzaSyAlajTzpE48YyA-BItxENoOv4WlMCAIIbQ',
-  authDomain: 'littlelightsforyou.firebaseapp.com',
-  databaseURL: 'https://littlelightsforyou.firebaseio.com',
-  projectId: 'littlelightsforyou',
-  storageBucket: 'littlelightsforyou.appspot.com',
-  messagingSenderId: '34644053172'
+  apiKey: 'your-key',
+  authDomain: 'xyz.firebaseapp.com',
+  databaseURL: 'https://xyz.firebaseio.com',
+  projectId: 'xyz',
+  storageBucket: 'xyz.appspot.com',
+  messagingSenderId: '12345678900'
 };
 
 const dashboardRoutes: Routes = [
